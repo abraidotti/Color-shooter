@@ -1,5 +1,13 @@
 # color-shooter: Plan
 
+## Design principle: mind games first
+Mind games (reading and bluffing opponents, as in Ikaruga) are the central design principle. Checklist for any new mechanic, weapon, map or mode:
+- Information: can the opponent read something (a color, a glint, a sound)?
+- Commitment: does acting cost something (cooldown, lockout, camo break) so choices matter?
+- Bluff: can a player fake or hide intent (toggling mid-charge, hiding in matching terrain)?
+- Counterplay: is there always a smart answer, and no strictly best option?
+Prefer designs that pass this checklist over raw stats or pure reflex.
+
 ## Milestones
 - [ ] 1. Movement sandbox: first-person controller in a CSG test room; tune until it feels good
 - [ ] 2. Polarity prototype: toggle LIGHT/DARK with cooldown; one standard hitscan weapon; target dummy

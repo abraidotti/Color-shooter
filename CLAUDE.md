@@ -4,6 +4,9 @@ A two-player first-person arena shooter in **Godot 4.x (GDScript)**. The central
 
 Full design, milestones and open questions: @docs/PLAN.md
 
+## Design principle: mind games first
+The fun is outwitting the other player. When designing or tuning anything, prefer features that create readable information, meaningful commitment, bluffing and counterplay over raw stats or reflexes. Every mechanic should give players something to read and something to hide. Telegraph dangerous actions (so opponents can react), make commitments costly (so choices matter), and avoid options that are strictly best or that remove decisions.
+
 ## Architecture rules
 - **Server-authoritative.** The server owns positions, health, polarity, hit resolution and round state. Clients send inputs only and never decide hits.
 - **Shared movement code.** One movement function is used by the client (prediction) and the server (simulation). Keep input reading separate from movement math.
