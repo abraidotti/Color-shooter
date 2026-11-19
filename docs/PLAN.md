@@ -83,6 +83,14 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Sounds are cosmetic: the server sends events (fired, absorbed, died) and clients play them locally.
 - Imported WAV files from a DAW are fine too; crunchy 8-bit sounds suit the silly tone.
 
+## Player experience and playtesting
+- Distribution: Windows client build (.exe + .pck, zipped) attached to a GitHub Release by CI; friend downloads, unzips, runs. Unsigned, so expect a SmartScreen warning. The same project exports as the headless Linux server. Client and server check build versions on connect and tell the player to download the latest build on mismatch. No web build (browsers cannot use ENet UDP).
+- Main menu: name field, Play Online (connect to the server), Host and Join by IP (LAN/dev), Settings (mouse sensitivity, FOV, volume, keybinds), Quit.
+- Lobby: player list with colors, Ready button, map and mode selection (by host or first player), game starts when all are ready.
+- In game: scoreboard (Tab), pause menu with settings, rematch screen after a match.
+- Matchmaking: none needed at first. Start with one always-on dedicated server on Lightsail and a shared lobby with ready-up. Add room codes (a tiny lobby service on the same server) only if several simultaneous games are needed. Steam (GodotSteam) is a later option for friends lists, invites and NAT punch-through.
+- Playtest flow: two local instances while developing; deploy the server to Lightsail once milestone 3 works; send the friend the build and play with Discord for voice; include a debug overlay (ping, FPS, server tick) and log files to diagnose issues.
+
 ## Art
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
@@ -94,4 +102,5 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Whether to add dash or bhop on top of slide.
 - Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
 - Camo strength (how transparent) and whether map zones flip on timers or switches.
+- Whether to add room codes (multiple simultaneous games) or stay with one shared lobby.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
