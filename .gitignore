@@ -1,0 +1,25 @@
+# Godot 4+
+.godot/
+.nogit/
+*.translation
+
+# Exports
+build/
+export/
+*.exe
+*.pck
+*.zip
+*.x86_64
+
+# Mono (unused, kept for safety)
+.mono/
+data_*/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings
+.claude/settings.local.json
