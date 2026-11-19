@@ -68,6 +68,13 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Set an AWS billing alarm (about $15).
 - Distribute Windows builds via GitHub releases. Version-check on connect.
 
+## Pre-match choices (builds and affinity)
+- Players make two choices in the lobby: a **build** and a **color affinity**. Locked at Ready; optionally changeable between rounds. Server validates and applies at spawn; stats live in a `BuildData` resource read by the shared movement code on both client and server.
+- Builds (names are final-ish): **Zoomer** (small): fast, low health, small hitbox, easy to hide. **Medium**: balanced default. **Chonk** (large): slow, high health, big hitbox, hard to hide. Size also affects camo.
+- Color affinity (permanent lean): toggling into your affinity color is faster and out of it slower; stronger camo in your color; starts each round in it. Optional "Chameleon" affinity: better camo, weaker shots.
+- Builds and weapons: weapons have a weight tag (light/medium/heavy). Prefer soft rules over hard restrictions: anyone can pick up anything, but the build changes handling (heavy weapons slow a Zoomer a lot and a Chonk barely; Zoomers swap and reload faster; Chonks resist recoil). Hard restrictions risk dead pickups and hard counters.
+- Team balance: start with no restrictions. If some picks prove too strong, give options point costs and equalize team budgets (smaller team gets extra points). Odd counts: the lone player on the short side gets a bonus pick or stat boost. Duplicates: unrestricted at first; consider a diversity bonus or one-of-each-build-per-team later. Free-for-all ignores team rules.
+
 ## Player count and odd numbers (target: 1 to 8)
 - No two-player assumptions: spawn points >= 8, dynamic player list, generic scoring.
 - Two polarities means same-colored players cannot hurt each other with standard shots, so color acts as a temporary team and toggling is switching sides. Odd counts work naturally (uneven splits), but all-same-color stalemates need the neutral piercing weapon, flip shots, or hazards.
@@ -103,4 +110,5 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
 - Camo strength (how transparent) and whether map zones flip on timers or switches.
 - Whether to add room codes (multiple simultaneous games) or stay with one shared lobby.
+- Soft vs hard weapon restrictions by build, whether choices can change between rounds, and whether to use point budgets.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
