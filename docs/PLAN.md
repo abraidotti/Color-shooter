@@ -49,7 +49,7 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 ## Networking
 - Godot high-level multiplayer: ENet (UDP), `MultiplayerSpawner`, `MultiplayerSynchronizer`, `@rpc`.
 - Server-authoritative; client-side prediction for the local player; interpolation for remote players; server-side hit detection. Lag compensation is a later extra.
-- Start with 2 players, one small map, one weapon.
+- Start testing with 2 players, one small map, one weapon, but build for up to 8 (`MAX_PLAYERS = 8`): dynamic spawning, no hardcoded player counts, per-player (not per-pair) scoring.
 - Server order decides toggle versus hit races; a short toggle windup keeps this fair.
 
 ## Build and deploy
@@ -61,6 +61,13 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Set an AWS billing alarm (about $15).
 - Distribute Windows builds via GitHub releases. Version-check on connect.
 
+## Player count and odd numbers (target: 1 to 8)
+- No two-player assumptions: spawn points >= 8, dynamic player list, generic scoring.
+- Two polarities means same-colored players cannot hurt each other with standard shots, so color acts as a temporary team and toggling is switching sides. Odd counts work naturally (uneven splits), but all-same-color stalemates need the neutral piercing weapon, flip shots, or hazards.
+- Odd-friendly mode ideas: free-for-all, king of the hill / control point, winner-stays duel queue (others watch or harass), random-asymmetric rounds (one "hunter" with a buff vs the rest), last-one-standing.
+- Team modes with uneven teams: scale health or damage for the smaller team, and fill with a bot if desired.
+- Possible variant: three polarities in a rock-paper-scissors cycle (more complexity; decide later).
+
 ## Art
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
@@ -70,4 +77,5 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Weapon acquisition: pickups, per-polarity, or draft.
 - Hitscan vs. slow projectiles for the baseline weapon.
 - Whether to add dash or bhop on top of slide.
+- Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
