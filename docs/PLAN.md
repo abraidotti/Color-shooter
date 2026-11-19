@@ -35,6 +35,13 @@ Starting values, to be tuned by feel and held in a `MovementConfig` resource:
 - Strong visual and audio language: clearly contrasting colors on model, weapon and tracers; distinct absorb effect and sound.
 - Possible anti-stall counters, since both players can match polarity forever: neutral piercing weapon, flip shots, environment hazards.
 
+## Map color and camouflage
+- Map surfaces/zones carry a polarity tag (LIGHT, DARK or NEUTRAL); the visual color comes from the same tag.
+- If a player's polarity matches the zone they are in, they fade into it (shader dissolve). The server decides camo state and replicates it; camo is visual only and never changes hit detection.
+- Moving fast, shooting or toggling breaks camo briefly, so nobody can camp invisibly. Keep camo partial (shimmer or faint outline) and give audio cues so hidden players can still be hunted.
+- Polarity now has two jobs: combat (same color absorbs) and hiding (match the terrain); the best color for each can differ.
+- Map ideas: split light/dark halves with a contested middle, checkerboard floors, zones that flip on a timer or switch, neutral cover.
+
 ## Weapons
 Each weapon relates to polarity differently:
 - Standard shot (pistol, rifle): carries your color, absorbed by matching target. Baseline.
@@ -78,4 +85,5 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Hitscan vs. slow projectiles for the baseline weapon.
 - Whether to add dash or bhop on top of slide.
 - Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
+- Camo strength (how transparent) and whether map zones flip on timers or switches.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
