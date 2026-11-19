@@ -75,6 +75,14 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Team modes with uneven teams: scale health or damage for the smaller team, and fill with a bot if desired.
 - Possible variant: three polarities in a rock-paper-scissors cycle (more complexity; decide later).
 
+## Audio
+- Generate sound effects in code at startup (client only; skip when `DisplayServer.get_name() == "headless"`): synthesize samples (pitch sweeps, square/sine waves, noise, decay envelopes) into `AudioStreamWAV` resources via `PackedByteArray.encode_s16`, cache them, and reuse. Optional later: `AudioStreamGenerator` for continuous or adaptive sounds.
+- Polarity has a distinct timbre: LIGHT is high and bright (sine-ish), DARK is low and buzzy (square-ish), so players can tell sides by ear.
+- Core sounds: shot (fast downward sweep + noise), absorb (rising chime), toggle (noise whoosh), hit, death, footsteps and slide (audio cues for hunting hidden players), camo break.
+- Use `AudioStreamPlayer3D` for world sounds and `AudioStreamPlayer` for UI. Buses: Master, SFX, Music, each with a volume slider.
+- Sounds are cosmetic: the server sends events (fired, absorbed, died) and clients play them locally.
+- Imported WAV files from a DAW are fine too; crunchy 8-bit sounds suit the silly tone.
+
 ## Art
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
