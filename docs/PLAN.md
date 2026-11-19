@@ -50,6 +50,7 @@ Each weapon relates to polarity differently:
 - Absorb weapons: shield or beam that stores absorbed shots and fires them back with a bonus.
 - Area weapons (grenade, shotgun): hurt all polarities, or dual-color at reduced damage.
 - Dual-polarity weapon: alternates color every shot.
+- **Scoped sniper rifle (required):** zoomed scope (FOV lerp on the camera, scope overlay, scaled mouse sensitivity, slight sway), slow fire, heavy weight tag. Its shot carries the shooter's polarity, so a target who matches color absorbs it, which makes toggling the core counterplay. Telegraphing keeps it fair: a charge-up or lock-on with a visible laser or scope glint in the shooter's color and an audio cue, so the target has a reaction window and the sniper can bluff by toggling mid-charge. Camo interaction: holding still while scoped keeps camo; firing breaks it and the glint can reveal the shooter. Variant: a neutral (polarity-ignoring) anti-stall sniper that is slower and louder. Sniper hits make lag compensation (rewinding positions on the server) worth adding earlier, and maps need cover against long sightlines.
 Hitscan is instant and leaves no time to react to polarity, so consider slower projectiles or a visible tracer with a few frames of delay.
 Weapon acquisition options: random spawn pickups, one fixed weapon per polarity (toggling swaps gun), or a draft of 2 to 3 random picks between rounds.
 
@@ -111,4 +112,5 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Camo strength (how transparent) and whether map zones flip on timers or switches.
 - Whether to add room codes (multiple simultaneous games) or stay with one shared lobby.
 - Soft vs hard weapon restrictions by build, whether choices can change between rounds, and whether to use point budgets.
+- Sniper details: charge time, laser/glint visibility, neutral variant, and when to add lag compensation.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
