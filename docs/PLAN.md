@@ -58,7 +58,7 @@ Each weapon relates to polarity differently:
 - Absorb weapons: shield or beam that stores absorbed shots and fires them back with a bonus.
 - Area weapons (grenade, shotgun): hurt all polarities, or dual-color at reduced damage.
 - Dual-polarity weapon: alternates color every shot.
-- **Scoped sniper rifle (required):** zoomed scope (FOV lerp on the camera, scope overlay, scaled mouse sensitivity, slight sway), slow fire, heavy weight tag. Its shot carries the shooter's polarity, so a target who matches color absorbs it, which makes toggling the core counterplay. Telegraphing keeps it fair: a charge-up or lock-on with a visible laser or scope glint in the shooter's color and an audio cue, so the target has a reaction window and the sniper can bluff by toggling mid-charge. Camo interaction: holding still while scoped keeps camo; firing breaks it and the glint can reveal the shooter. Variant: a neutral (polarity-ignoring) anti-stall sniper that is slower and louder. Sniper hits make lag compensation (rewinding positions on the server) worth adding earlier, and maps need cover against long sightlines.
+- **Scoped sniper rifle (required):** zoomed scope (FOV lerp on the camera, scope overlay, scaled mouse sensitivity, slight sway), slow fire. Its shot carries the shooter's polarity, so a target who matches color absorbs it, which makes toggling the core counterplay. Telegraphing keeps it fair: a charge-up or lock-on with a visible laser or scope glint in the shooter's color and an audio cue, so the target has a reaction window and the sniper can bluff by toggling mid-charge. Camo interaction: holding still while scoped keeps camo; firing breaks it and the glint can reveal the shooter. Variant: a neutral (polarity-ignoring) anti-stall sniper that is slower and louder. Sniper hits make lag compensation (rewinding positions on the server) worth adding earlier, and maps need cover against long sightlines.
 Hitscan is instant and leaves no time to react to polarity, so consider slower projectiles or a visible tracer with a few frames of delay.
 Weapon acquisition options: random spawn pickups, one fixed weapon per polarity (toggling swaps gun), or a draft of 2 to 3 random picks between rounds.
 
@@ -77,12 +77,10 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Set an AWS billing alarm (about $15).
 - Distribute Windows builds via GitHub releases. Version-check on connect.
 
-## Pre-match choices (builds and affinity)
-- Players make two choices in the lobby: a **build** and a **color affinity**. Locked at Ready; optionally changeable between rounds. Server validates and applies at spawn; stats live in a `BuildData` resource read by the shared movement code on both client and server.
-- Builds (names are final-ish): **Zoomer** (small): fast, low health, small hitbox, easy to hide. **Medium**: balanced default. **Chonk** (large): slow, high health, big hitbox, hard to hide. Size also affects camo.
-- Color affinity (permanent lean): toggling into your affinity color is faster and out of it slower; stronger camo in your color; starts each round in it. Optional "Chameleon" affinity: better camo, weaker shots.
-- Builds and weapons: weapons have a weight tag (light/medium/heavy). Prefer soft rules over hard restrictions: anyone can pick up anything, but the build changes handling (heavy weapons slow a Zoomer a lot and a Chonk barely; Zoomers swap and reload faster; Chonks resist recoil). Hard restrictions risk dead pickups and hard counters.
-- Team balance: start with no restrictions. If some picks prove too strong, give options point costs and equalize team budgets (smaller team gets extra points). Odd counts: the lone player on the short side gets a bonus pick or stat boost. Duplicates: unrestricted at first; consider a diversity bonus or one-of-each-build-per-team later. Free-for-all ignores team rules.
+## Pre-match choice: color affinity
+- Players pick a **color affinity** in the lobby. Locked at Ready; optionally changeable between rounds. The server validates it and applies it at spawn; its values live in a Resource (like `WeaponData`) that the shared movement and toggle code reads on both client and server.
+- Affinity is a permanent lean toward one polarity: toggling into your affinity color is faster and out of it slower; camo is stronger in your color; you start each round in it. Optional "Chameleon" affinity: better camo, weaker shots.
+- Team balance: start with no restrictions. If some choices prove too strong, give them point costs and equalize team budgets (smaller team gets extra points). Odd counts: the lone player on the short side gets a bonus or stat boost. Free-for-all ignores team rules.
 
 ## Player count and odd numbers (target: 1 to 8)
 - No two-player assumptions: spawn points >= 8, dynamic player list, generic scoring.
@@ -119,6 +117,6 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 - Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
 - Camo strength (how transparent) and whether map zones flip on timers or switches.
 - Whether to add room codes (multiple simultaneous games) or stay with one shared lobby.
-- Soft vs hard weapon restrictions by build, whether choices can change between rounds, and whether to use point budgets.
+- Whether affinity can change between rounds, whether to use point budgets, and whether to add a second pre-match choice.
 - Sniper details: charge time, laser/glint visibility, neutral variant, and when to add lag compensation.
 - Final game name (working repo name: color-shooter; fun candidate: Chroma Blast 3000).
