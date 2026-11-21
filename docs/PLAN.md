@@ -72,6 +72,7 @@ Each weapon relates to polarity differently:
 - Area weapons (grenade, shotgun): hurt all polarities, or dual-color at reduced damage.
 - Dual-polarity weapon: alternates color every shot.
 - **Scoped sniper rifle (required):** zoomed scope (FOV lerp on the camera, scope overlay, scaled mouse sensitivity, slight sway), slow fire. Its shot carries the shooter's polarity, so a target who matches color absorbs it, which makes toggling the core counterplay. Telegraphing keeps it fair: a charge-up or lock-on with a visible laser or scope glint in the shooter's color and an audio cue, so the target has a reaction window and the sniper can bluff by toggling mid-charge. Camo interaction: holding still while scoped keeps camo; firing breaks it and the glint can reveal the shooter. Variant: a neutral (polarity-ignoring) anti-stall sniper that is slower and louder. Sniper hits make lag compensation (rewinding positions on the server) worth adding earlier, and maps need cover against long sightlines.
+**Fire modes (hitscan now, projectile later):** weapons are data (`WeaponData`) with a fire mode, and the server resolves every shot through one function that takes a shot record (shooter, origin, direction, timestamp, shooter polarity at fire time, weapon id). MVP implements only the `HITSCAN` resolver. A later `PROJECTILE` resolver spawns server-simulated projectiles (swept ray checks each tick to avoid tunneling) that carry the shooter's polarity from the moment of firing while the target's polarity is checked at impact, so toggling while a projectile is in flight becomes a new mind game. Clients only render projectiles.
 Hitscan is instant and leaves no time to react to polarity, so consider slower projectiles or a visible tracer with a few frames of delay.
 Weapon acquisition options: random spawn pickups, one fixed weapon per polarity (toggling swaps gun), or a draft of 2 to 3 random picks between rounds.
 
@@ -134,15 +135,17 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
 ## Open questions (ask before deciding)
+**Decided**
+- Friends use Windows: Windows client build only.
+- Baseline weapon is hitscan for the MVP; projectile weapons come later through the fire-mode abstraction (see Weapons).
+
 **Decide before milestone 1 to 3**
 - Pin a Godot version (latest stable 4.x).
 - Netcode approach: full client-side prediction and reconciliation, or client-authoritative movement with server-authoritative combat and polarity (simpler for friends, weaker against cheating). Decide before milestone 3.
-- Friend's operating system (is a Windows build enough?).
 
 **Decide before milestone 2**
 - Exact toggle cost model (cooldown only vs. windup vs. resource meter).
 - What the absorb meter is used for.
-- Hitscan vs. slow projectiles for the baseline weapon.
 
 **Later (backlog)**
 - Weapon acquisition: pickups, per-polarity, or draft.

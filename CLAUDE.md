@@ -13,6 +13,7 @@ The fun is outwitting the other player. When designing or tuning anything, prefe
 - **Polarity resolution happens on the server** by comparing shooter and target polarity at the moment of impact.
 - **One codebase, two modes.** The same project runs as a client or, with `--server`, as a headless dedicated server (`godot --headless --path . -- --server`). The game must also run as listen-server (host + client) for local testing.
 - Design for **up to 8 players** (`MAX_PLAYERS = 8`), including odd counts. Never hardcode 2 anywhere: use a dynamic player list, 8+ spawn points per map, and team/score logic that works for any N (1 to 8). The first milestones are still tested with 2.
+- **Shots go through one server-side resolver** keyed by the weapon's fire mode (`HITSCAN` now, `PROJECTILE` later). Never put hit logic in individual weapon scripts or on the client.
 - Client and server must check a build version on connect and refuse mismatches.
 
 ## Conventions
