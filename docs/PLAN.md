@@ -140,6 +140,13 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Record any borrowed code or assets with their license in `CREDITS.md`.
 - Verify a repo's license before using it; no license means no reuse.
 
+## Player models
+- Keep visuals and hitboxes separate: hit detection uses a simple capsule or box, never the visible mesh, so models can change freely.
+- Polarity must be readable from the model at a glance: color plus a distinct shape or pattern (see Accessibility). Keep one simple mesh and one swappable material per player so the camo shader can dissolve it cleanly.
+- Low-poly, flat-shaded, vertex-colored characters generated in code (see Art); animation is procedural (bob, lean, slide pose, recoil) with no skeleton or rig.
+- First-person view: a simple viewmodel (weapon block and hands) with its own camera or layer so it never clips into walls.
+- MVP: a capsule body with polarity color and shape, plus a block for the weapon. Nicer models come after the playtest gate.
+
 ## Art
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
