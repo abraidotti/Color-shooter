@@ -8,16 +8,29 @@ Mind games (reading and bluffing opponents, as in Ikaruga) are the central desig
 - Counterplay: is there always a smart answer, and no strictly best option?
 Prefer designs that pass this checklist over raw stats or pure reflex.
 
+## MVP scope
+MVP = 1v1, one small map, polarity with a toggle cost, one standard weapon, rounds, a minimal lobby, and basic sounds. Everything else is in the backlog below and waits for the playtest gate.
+
 ## Milestones
 - [ ] 1. Movement sandbox: first-person controller in a CSG test room; tune until it feels good
 - [ ] 2. Polarity prototype: toggle LIGHT/DARK with cooldown; one standard hitscan weapon; target dummy
 - [ ] 3. Connect two players: host/join by IP (listen server), spawn both, sync position and look
-- [ ] 4. Authoritative combat: clients send fire input, the server raycasts and applies damage, death, respawn, polarity absorb
-- [ ] 5. Rounds: countdown, fight, score, reset, first to N wins
-- [ ] 6. Content: neutral piercing weapon, more weapons, 2 to 3 maps, HUD and menus
-- [ ] 7. Deploy: headless Linux server export, AWS Lightsail, systemd; Windows client build
+- [ ] 4. Minimal deploy and first playtest: headless Linux server on AWS Lightsail (systemd), Windows client build, play with the friend
+- [ ] 5. Authoritative combat: clients send fire input, the server raycasts and applies damage, death, respawn, polarity absorb
+- [ ] 6. Rounds: countdown, fight, score, reset, first to N wins
+- [ ] 7. MVP polish: lobby, main menu, HUD, generated sound effects, one map
+- [ ] **Playtest gate:** play the MVP with the friend. Only if polarity mind games are fun, start the backlog.
 
-Playtest the polarity prototype (milestone 2 to 3) with a friend before building more weapons. If the toggle mind game is not fun with a basic pistol, rethink it.
+Playtest the polarity prototype (milestones 2 to 4) with a friend before building more weapons. If the toggle mind game is not fun with a basic pistol, rethink it.
+
+## Backlog (post-MVP, in rough order; each must pass the mind-games checklist)
+1. Map color zones and camouflage
+2. Color affinity (pre-match choice)
+3. Neutral piercing weapon and polarity-flip shot (anti-stall)
+4. Scoped sniper, with lag compensation
+5. More weapons and weapon acquisition (pickups or draft)
+6. Game modes for 3 to 8 players (free-for-all, king of the hill, winner-stays, hunter rounds)
+7. More maps, room codes, optional third polarity
 
 ## Setup
 - Godot 4.x standard (GDScript build), pinned. Same version for client, server and CI.
@@ -67,6 +80,7 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Server-authoritative; client-side prediction for the local player; interpolation for remote players; server-side hit detection. Lag compensation is a later extra.
 - Start testing with 2 players, one small map, one weapon, but build for up to 8 (`MAX_PLAYERS = 8`): dynamic spawning, no hardcoded player counts, per-player (not per-pair) scoring.
 - Server order decides toggle versus hit races; a short toggle windup keeps this fair.
+- Server hardening: validate every RPC argument and sender, rate-limit RPCs, cap message sizes, sanitize player names, ignore impossible inputs (speed, fire rate, polarity changes during cooldown), never trust client-reported hits, and keep no secrets in the client build.
 
 ## Build and deploy
 - Export presets committed: Linux dedicated server, Windows client.
@@ -89,6 +103,12 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Team modes with uneven teams: scale health or damage for the smaller team, and fill with a bot if desired.
 - Possible variant: three polarities in a rock-paper-scissors cycle (more complexity; decide later).
 
+## Accessibility
+- The game is color-coded, so never rely on color alone. LIGHT and DARK differ in brightness (not just hue); also give each polarity a distinct shape or pattern on the player model, weapon and tracers, a clear HUD icon, and a distinct sound.
+- Camo zones and map polarity tags use patterns or geometry cues in addition to color.
+- Offer a colorblind-safe palette option and adjustable polarity colors in Settings.
+- Settings: mouse sensitivity, FOV, remappable keys, toggle-or-hold options (slide, scope), volume sliders.
+
 ## Audio
 - Generate sound effects in code at startup (client only; skip when `DisplayServer.get_name() == "headless"`): synthesize samples (pitch sweeps, square/sine waves, noise, decay envelopes) into `AudioStreamWAV` resources via `PackedByteArray.encode_s16`, cache them, and reuse. Optional later: `AudioStreamGenerator` for continuous or adaptive sounds.
 - Polarity has a distinct timbre: LIGHT is high and bright (sine-ish), DARK is low and buzzy (square-ish), so players can tell sides by ear.
@@ -105,14 +125,27 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Matchmaking: none needed at first. Start with one always-on dedicated server on Lightsail and a shared lobby with ready-up. Add room codes (a tiny lobby service on the same server) only if several simultaneous games are needed. Steam (GodotSteam) is a later option for friends lists, invites and NAT punch-through.
 - Playtest flow: two local instances while developing; deploy the server to Lightsail once milestone 3 works; send the friend the build and play with Discord for voice; include a debug overlay (ping, FPS, server tick) and log files to diagnose issues.
 
+## License and reuse
+- Repo license is undecided. Reuse only MIT-licensed code (for example the Liblast Framework, OpenFPS, the True First Person Multiplayer template), preferably as a reference. Do not copy GPL or AGPL code (Liblast the game, Spelloff, others): distributing a build would oblige releasing this project under the same license.
+- Record any borrowed code or assets with their license in `CREDITS.md`.
+- Verify a repo's license before using it; no license means no reuse.
+
 ## Art
 Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, CSG for blockouts), shared resources or `MultiMeshInstance3D` for repeated props. CC0 packs (Kenney, Quaternius, Poly Haven) are a fallback. Keep one cohesive palette.
 
 ## Open questions (ask before deciding)
+**Decide before milestone 1 to 3**
+- Pin a Godot version (latest stable 4.x).
+- Netcode approach: full client-side prediction and reconciliation, or client-authoritative movement with server-authoritative combat and polarity (simpler for friends, weaker against cheating). Decide before milestone 3.
+- Friend's operating system (is a Windows build enough?).
+
+**Decide before milestone 2**
 - Exact toggle cost model (cooldown only vs. windup vs. resource meter).
 - What the absorb meter is used for.
-- Weapon acquisition: pickups, per-polarity, or draft.
 - Hitscan vs. slow projectiles for the baseline weapon.
+
+**Later (backlog)**
+- Weapon acquisition: pickups, per-polarity, or draft.
 - Whether to add dash or bhop on top of slide.
 - Game modes for 3 to 8 players (see Player count section) and whether to add a third polarity.
 - Camo strength (how transparent) and whether map zones flip on timers or switches.

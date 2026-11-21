@@ -1,6 +1,6 @@
 # color-shooter (working title)
 
-A two-player first-person arena shooter in **Godot 4.x (GDScript)**. The central mechanic is Ikaruga-style **polarity**: each player is LIGHT or DARK. A shot is absorbed by a same-polarity target and damages an opposite-polarity one. Movement is a "middle ground": simple and forgiving, with slide and light air control. The tone is silly, so the game should not take itself too seriously.
+A multiplayer first-person arena shooter for 2 to 8 players (first tested 1v1) in **Godot 4.x (GDScript)**. The central mechanic is Ikaruga-style **polarity**: each player is LIGHT or DARK. A shot is absorbed by a same-polarity target and damages an opposite-polarity one. Movement is a "middle ground": simple and forgiving, with slide and light air control. The tone is silly, so the game should not take itself too seriously.
 
 Full design, milestones and open questions: @docs/PLAN.md
 
@@ -34,3 +34,5 @@ The fun is outwitting the other player. When designing or tuning anything, prefe
 ## Working agreement
 - Ask before making a decision listed under "Open questions" in `docs/PLAN.md`.
 - Do not start a milestone before the previous one is playable.
+- Backlog items in `docs/PLAN.md` wait until the MVP playtest gate passes.
+- Reuse only MIT-licensed code; never copy GPL/AGPL code. Record borrowed code in `CREDITS.md`.
