@@ -13,8 +13,8 @@ MVP = 1v1, one small map, polarity with a toggle cost, one standard weapon, roun
 
 ## Milestones
 - [ ] 1. Movement sandbox: first-person controller in a CSG test room; tune until it feels good
-- [ ] 2. Polarity prototype: toggle LIGHT/DARK with cooldown; one standard hitscan weapon; target dummy
-- [ ] 3. Connect two players: host/join by IP (listen server), spawn both, sync position and look
+- [ ] 2. Polarity prototype: toggle LIGHT/DARK with cooldown; one standard hitscan weapon; dummy target that toggles polarity on a timer; `InputSource` abstraction (human or bot) and unit tests for polarity resolution
+- [ ] 3. Connect two players: host/join by IP (listen server), spawn both, sync position and look; headless test harness (server + bot clients)
 - [ ] 4. Minimal deploy and first playtest: headless Linux server on AWS Lightsail (systemd), Windows client build, play with the friend
 - [ ] 5. Authoritative combat: clients send fire input, the server raycasts and applies damage, death, respawn, polarity absorb
 - [ ] 6. Rounds: countdown, fight, score, reset, first to N wins
@@ -31,6 +31,7 @@ Playtest the polarity prototype (milestones 2 to 4) with a friend before buildin
 5. More weapons and weapon acquisition (pickups or draft)
 6. Game modes for 3 to 8 players (free-for-all, king of the hill, winner-stays, hunter rounds)
 7. More maps, room codes, optional third polarity
+8. Smarter bots (reactive, bluffing) and a headless simulation mode for balance sweeps
 
 ## Setup
 - **Godot 4.7.2-stable** (standard GDScript build), pinned. Same version (and matching export templates) for client, server and CI. Confirm on godotengine.org that no newer 4.7.x maintenance release exists before starting; upgrade within 4.7.x only deliberately.
@@ -96,6 +97,14 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 - Players pick a **color affinity** in the lobby. Locked at Ready; optionally changeable between rounds. The server validates it and applies it at spawn; its values live in a Resource (like `WeaponData`) that the shared movement and toggle code reads on both client and server.
 - Affinity is a permanent lean toward one polarity: toggling into your affinity color is faster and out of it slower; camo is stronger in your color; you start each round in it. Optional "Chameleon" affinity: better camo, weaker shots.
 - Team balance: start with no restrictions. If some choices prove too strong, give them point costs and equalize team budgets (smaller team gets extra points). Odd counts: the lone player on the short side gets a bonus or stat boost. Free-for-all ignores team rules.
+
+## Bots, tests and simulation
+- **`InputSource` abstraction:** every player is driven by an `InputSource` (human or bot) that feeds the same input path (move, look, fire, toggle). Bots therefore exercise the real game code, and bots can also fill empty slots (useful for odd player counts).
+- **Early (milestone 2):** a dummy target that toggles polarity on a timer, so the toggle, absorb, cooldown and lockout can be tested alone before networking exists. Unit tests (gdUnit4 or GUT) for polarity resolution, cooldowns, fire lockout and round flow.
+- **Milestone 3:** a headless harness that starts a dedicated server plus bot clients, to catch netcode and desync bugs without a second human. Run it in CI.
+- **After the playtest gate:** reactive bots with a configurable reaction delay and bluff probability, and a headless simulation mode (accelerated time, many bot-vs-bot rounds, CSV output) to sweep values such as the toggle cooldown and to measure stalemate rates and whether a fast-reacting bot can absorb everything.
+- Limits: bots and simulation find bugs, degenerate strategies and broken numbers. Whether the mind game is fun can only be judged by human playtests.
+- Build and run this in Claude Code, where Godot is installed and tests can run.
 
 ## Player count and odd numbers (target: 1 to 8)
 - No two-player assumptions: spawn points >= 8, dynamic player list, generic scoring.
