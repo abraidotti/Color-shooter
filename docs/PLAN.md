@@ -33,7 +33,7 @@ Playtest the polarity prototype (milestones 2 to 4) with a friend before buildin
 7. More maps, room codes, optional third polarity
 
 ## Setup
-- Godot 4.x standard (GDScript build), pinned. Same version for client, server and CI.
+- **Godot 4.7.2-stable** (standard GDScript build), pinned. Same version (and matching export templates) for client, server and CI. Confirm on godotengine.org that no newer 4.7.x maintenance release exists before starting; upgrade within 4.7.x only deliberately.
 - Git with Godot `.gitignore`. Git LFS only if large binaries appear.
 - Godot editor for scenes and tuning; IDE + Claude Code for scripts (Godot LSP on port 6005).
 - Local multiplayer: Debug > Run Multiple Instances, connect to 127.0.0.1.
@@ -51,8 +51,8 @@ Starting values, to be tuned by feel and held in a `MovementConfig` resource:
 ## Polarity (central mechanic)
 - Each player has polarity `LIGHT` or `DARK`, replicated by the server.
 - A shot carries the shooter's polarity. Same polarity as the target: absorbed (no damage). Opposite polarity: damages the target.
-- Absorbing fills a meter (use TBD, see open questions).
-- Toggle cost, start simple: cooldown ~1 to 2s plus a short fire lockout after switching. Consider later: windup vulnerability (~0.2s), a toggle resource meter, absorb refilling that meter.
+- In the MVP absorbing is purely defensive (no meter). Later option: absorbed shots charge a special shot (the Ikaruga homing-laser idea).
+- **Toggle cost (decided for MVP):** cooldown ~1.5s plus a short fire lockout after switching. Add later only if toggling proves too spammable: windup vulnerability (~0.2s), a toggle resource meter, absorb refilling that meter.
 - Strong visual and audio language: clearly contrasting colors on model, weapon and tracers; distinct absorb effect and sound.
 - Possible anti-stall counters, since both players can match polarity forever: neutral piercing weapon, flip shots, environment hazards.
 
@@ -78,7 +78,7 @@ Weapon acquisition options: random spawn pickups, one fixed weapon per polarity 
 
 ## Networking
 - Godot high-level multiplayer: ENet (UDP), `MultiplayerSpawner`, `MultiplayerSynchronizer`, `@rpc`.
-- Server-authoritative; client-side prediction for the local player; interpolation for remote players; server-side hit detection. Lag compensation is a later extra.
+- **Netcode approach (decided):** clients are authoritative over their own movement (they report position and look; the server sanity-checks speed and teleports and corrects violations). The server is authoritative over polarity, hit detection, damage, health, rounds and score. Remote players are interpolated. Lag compensation for hits is a later extra (needed for the sniper). Input reading stays separate from movement math so full prediction and reconciliation can be added later if needed.
 - Start testing with 2 players, one small map, one weapon, but build for up to 8 (`MAX_PLAYERS = 8`): dynamic spawning, no hardcoded player counts, per-player (not per-pair) scoring.
 - Server order decides toggle versus hit races; a short toggle windup keeps this fair.
 - Server hardening: validate every RPC argument and sender, rate-limit RPCs, cap message sizes, sanitize player names, ignore impossible inputs (speed, fire rate, polarity changes during cooldown), never trust client-reported hits, and keep no secrets in the client build.
@@ -138,14 +138,9 @@ Low-poly, flat-shaded, vertex-colored meshes generated in code (`SurfaceTool`, C
 **Decided**
 - Friends use Windows: Windows client build only.
 - Baseline weapon is hitscan for the MVP; projectile weapons come later through the fire-mode abstraction (see Weapons).
-
-**Decide before milestone 1 to 3**
-- Pin a Godot version (latest stable 4.x).
-- Netcode approach: full client-side prediction and reconciliation, or client-authoritative movement with server-authoritative combat and polarity (simpler for friends, weaker against cheating). Decide before milestone 3.
-
-**Decide before milestone 2**
-- Exact toggle cost model (cooldown only vs. windup vs. resource meter).
-- What the absorb meter is used for.
+- Godot 4.7.2-stable, pinned.
+- Netcode: client-authoritative movement, server-authoritative combat, polarity and rounds (see Networking).
+- Toggle cost: ~1.5s cooldown plus fire lockout; absorbing is defensive only in the MVP.
 
 **Later (backlog)**
 - Weapon acquisition: pickups, per-polarity, or draft.

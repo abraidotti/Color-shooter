@@ -8,8 +8,8 @@ Full design, milestones and open questions: @docs/PLAN.md
 The fun is outwitting the other player. When designing or tuning anything, prefer features that create readable information, meaningful commitment, bluffing and counterplay over raw stats or reflexes. Every mechanic should give players something to read and something to hide. Telegraph dangerous actions (so opponents can react), make commitments costly (so choices matter), and avoid options that are strictly best or that remove decisions.
 
 ## Architecture rules
-- **Server-authoritative.** The server owns positions, health, polarity, hit resolution and round state. Clients send inputs only and never decide hits.
-- **Shared movement code.** One movement function is used by the client (prediction) and the server (simulation). Keep input reading separate from movement math.
+- **Authority split.** The server owns health, polarity, hit resolution, damage, round state and score. Clients are authoritative over their own movement (they report position and look), and the server sanity-checks speed and teleports and corrects violations. Clients never decide hits or polarity.
+- **Keep input reading separate from movement math** (one movement function), so full client-side prediction with server reconciliation can be added later without a rewrite.
 - **Polarity resolution happens on the server** by comparing shooter and target polarity at the moment of impact.
 - **One codebase, two modes.** The same project runs as a client or, with `--server`, as a headless dedicated server (`godot --headless --path . -- --server`). The game must also run as listen-server (host + client) for local testing.
 - Design for **up to 8 players** (`MAX_PLAYERS = 8`), including odd counts. Never hardcode 2 anywhere: use a dynamic player list, 8+ spawn points per map, and team/score logic that works for any N (1 to 8). The first milestones are still tested with 2.
@@ -17,7 +17,7 @@ The fun is outwitting the other player. When designing or tuning anything, prefe
 - Client and server must check a build version on connect and refuse mismatches.
 
 ## Conventions
-- Godot version is pinned (record it in `docs/PLAN.md` when chosen). Do not use APIs from other versions.
+- Godot is pinned to **4.7.2-stable** (see `docs/PLAN.md`). Do not use APIs from other versions.
 - Tunable values (movement, toggle cooldown, weapon stats) live in `.tres` Resources (`MovementConfig`, `WeaponData`), not in code.
 - Typed GDScript. Format and lint with `gdformat` and `gdlint` (gdtoolkit).
 - Prefer procedural low-poly meshes (`SurfaceTool`) with vertex colors and flat shading. Avoid textures.
